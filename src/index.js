@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { HashRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store";
+import "./services/axios";
 
 ReactDOM.render(
   <React.StrictMode>
