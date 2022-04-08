@@ -4,7 +4,6 @@ import AppContainer from "./layout/AppContainer";
 import Home from "./Home";
 import BasicSetting from "./settings/Basic";
 import ProductGroup from "./settings/Basic/ProductGroup";
-import ProductGroupForm from "./settings/Basic/ProductGroup/Form";
 import Plant from "./settings/Basic/Plant";
 
 export default function App() {
@@ -15,10 +14,7 @@ export default function App() {
 
         <Route path="/settings">
           <Route path="basic" element={<BasicSetting />}>
-            <Route path="product-group" element={<ProductGroup />}>
-              <Route path="create" element={<ProductGroupForm />} />
-              <Route path=":id" element={<ProductGroupForm />} />
-            </Route>
+            <Route path="product-group" element={<ProductGroup />} />
 
             <Route path="plant" element={<Plant />} />
           </Route>
