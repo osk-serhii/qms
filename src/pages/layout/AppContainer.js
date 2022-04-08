@@ -33,7 +33,7 @@ class Appcontainer extends React.Component {
             </Menu.Item>
 
             <Menu.Item key="basic-settings" icon={<SettingOutlined />}>
-              <Link to={`/settings/basic`}>Basic Settings</Link>
+              <Link to={`/settings/basic/product-group`}>Basic settings</Link>
             </Menu.Item>
 
             <SubMenu key="sub1" icon={<AuditOutlined />} title="Audit">

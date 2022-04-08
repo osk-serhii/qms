@@ -1,0 +1,9 @@
+.ant-btn.ant-btn-primary {
+  @apply bg-sky-400 border-sky-400;
+}
+.ant-btn.ant-btn-primary:hover {
+  @apply bg-sky-500 border-sky-500;
+}
+.ant-btn.ant-btn-primary:active {
+  @apply bg-sky-600;
+}
