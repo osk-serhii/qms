@@ -3,11 +3,39 @@ import { faPlus, faBan, faPen } from "@fortawesome/free-solid-svg-icons";
 import { Button, Input, Table, Tooltip } from "antd";
 import { Link, Outlet } from "react-router-dom";
 
-const Plant = () => {
+const Employee = () => {
   const columns = [
     {
-      title: "Title",
-      dataIndex: "title",
+      title: "First Name",
+      dataIndex: "first_name",
+    },
+    {
+      title: "Last Name",
+      dataIndex: "last_name",
+    },
+    {
+      title: "Employee ID",
+      dataIndex: "employee_id",
+    },
+    {
+      title: "E-Mail",
+      dataIndex: "email",
+    },
+    {
+      title: "Plant",
+      dataIndex: "plant",
+    },
+    {
+      title: "Plant Head",
+      dataIndex: "plant_head",
+    },
+    {
+      title: "Department",
+      dataIndex: "department",
+    },
+    {
+      title: "Plantform User",
+      dataIndex: "plantform_user",
     },
     {
       title: "Created",
@@ -42,21 +70,16 @@ const Plant = () => {
   const data = [
     {
       id: "1",
-      title: "Barcelona, Spain",
+      first_name: "First 1",
+      last_name: "Last1",
+      employee_id: "SDES3245",
+      email: "test1@gmail.com",
+      plant: "Plant1",
+      department: "Management",
+      plant_head: 'Yes',
+      plantform_user: "Yes",
       createdAt: "2022-01-03 11:11:11",
       modifiedAt: "2022-03-01 09:09:09",
-    },
-    {
-      id: "2",
-      title: "Barcelona, Spain",
-      createdAt: "2022-01-03 11:11:11",
-      modifiedAt: "2022-03-01 09:09:09",
-    },
-    {
-      id: "3",
-      title: "Barcelona, Spain",
-      createdAt: "2022-04-09 11:11:11",
-      modifiedAt: "2022-04-10 09:09:09",
     },
   ];
 
@@ -65,11 +88,11 @@ const Plant = () => {
       <div className="flex justify-between mb-2">
         <Input.Search placeholder="input search text" className="w-60" />
         <Link
-          to={`/settings/basic/product-group/create`}
+          to={`/settings/basic/employee/create`}
           className="ant-btn ant-btn-primary"
         >
           <FontAwesomeIcon icon={faPlus} className="mr-1" />
-          New Plant
+          New Employee
         </Link>
       </div>
 
@@ -80,4 +103,4 @@ const Plant = () => {
   );
 }
 
-export default Plant;
+export default Employee;

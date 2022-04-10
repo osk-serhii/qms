@@ -3,11 +3,11 @@ import { faPlus, faBan, faPen } from "@fortawesome/free-solid-svg-icons";
 import { Button, Input, Table, Tooltip } from "antd";
 import { Link, Outlet } from "react-router-dom";
 
-const Plant = () => {
+const CustomerComplaintRep = () => {
   const columns = [
     {
-      title: "Title",
-      dataIndex: "title",
+      title: "Name",
+      dataIndex: "name",
     },
     {
       title: "Created",
@@ -42,19 +42,19 @@ const Plant = () => {
   const data = [
     {
       id: "1",
-      title: "Barcelona, Spain",
+      name: "name1",
       createdAt: "2022-01-03 11:11:11",
       modifiedAt: "2022-03-01 09:09:09",
     },
     {
       id: "2",
-      title: "Barcelona, Spain",
+      name: "name2",
       createdAt: "2022-01-03 11:11:11",
       modifiedAt: "2022-03-01 09:09:09",
     },
     {
       id: "3",
-      title: "Barcelona, Spain",
+      name: "name3",
       createdAt: "2022-04-09 11:11:11",
       modifiedAt: "2022-04-10 09:09:09",
     },
@@ -69,7 +69,7 @@ const Plant = () => {
           className="ant-btn ant-btn-primary"
         >
           <FontAwesomeIcon icon={faPlus} className="mr-1" />
-          New Plant
+          New Customer Complaint Rep
         </Link>
       </div>
 
@@ -80,4 +80,4 @@ const Plant = () => {
   );
 }
 
-export default Plant;
+export default CustomerComplaintRep;

@@ -16,6 +16,7 @@ axios.interceptors.request.use(
     if (token) {
       config.headers['authorization'] = token;
     }
+    config.headers['Context-type'] = 'application/json';
     return config;
   },
   error => {

@@ -3,11 +3,19 @@ import { faPlus, faBan, faPen } from "@fortawesome/free-solid-svg-icons";
 import { Button, Input, Table, Tooltip } from "antd";
 import { Link, Outlet } from "react-router-dom";
 
-const Plant = () => {
+const Department = () => {
   const columns = [
     {
-      title: "Title",
-      dataIndex: "title",
+      title: "Department",
+      dataIndex: "department",
+    },
+    {
+      title: "Plant",
+      dataIndex: "plant",
+    },
+    {
+      title: "Product Group",
+      dataIndex: "product_group",
     },
     {
       title: "Created",
@@ -42,21 +50,27 @@ const Plant = () => {
   const data = [
     {
       id: "1",
-      title: "Barcelona, Spain",
+      department: "Management",
+      plant: "Plant1",
+      product_group: "Product Group 1",
       createdAt: "2022-01-03 11:11:11",
       modifiedAt: "2022-03-01 09:09:09",
     },
     {
       id: "2",
-      title: "Barcelona, Spain",
+      department: "Sales",
+      plant: "Plant2",
+      product_group: "Product Group 2",
       createdAt: "2022-01-03 11:11:11",
       modifiedAt: "2022-03-01 09:09:09",
     },
     {
       id: "3",
-      title: "Barcelona, Spain",
-      createdAt: "2022-04-09 11:11:11",
-      modifiedAt: "2022-04-10 09:09:09",
+      department: "Design",
+      plant: "Plant3",
+      product_group: "Product Group 3",
+      createdAt: "2022-01-03 11:11:11",
+      modifiedAt: "2022-03-01 09:09:09",
     },
   ];
 
@@ -69,7 +83,7 @@ const Plant = () => {
           className="ant-btn ant-btn-primary"
         >
           <FontAwesomeIcon icon={faPlus} className="mr-1" />
-          New Plant
+          New Department
         </Link>
       </div>
 
@@ -80,4 +94,4 @@ const Plant = () => {
   );
 }
 
-export default Plant;
+export default Department;

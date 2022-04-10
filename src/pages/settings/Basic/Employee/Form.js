@@ -67,11 +67,12 @@ const ProductGroupForm = () => {
   return (
     <SideOverlap
       open={true}
-      onClose={() => navigate("/settings/basic/product-group")}
+      onClose={() => navigate("/settings/basic/employee")}
+      width="500"
     >
       <form className="w-full h-full flex flex-col" onSubmit={handleSubmit}>
         <div className="bg-sky-500 px-4 py-4 text-lg text-white flex-none">
-          {id ? "New" : "Edit"} Product Group
+          {id ? "New" : "Edit"} Employee
         </div>
 
         <div className="flex-grow p-2">
