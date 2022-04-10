@@ -2,14 +2,12 @@ import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Button, Input, message } from "antd";
-import { useParams, useNavigate } from "react-router-dom";
-import SideOverlap from "../../../../@components/SideOverlap";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-const ProductGroupForm = () => {
-  const { id } = useParams();
+const ProductGroupForm = ({ id = null }) => {
   const navigate = useNavigate();
   const [formInitialValues, setFormInitialValues] = useState({
     title: "",
@@ -17,7 +15,7 @@ const ProductGroupForm = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      if (!id) return;
+      if (id <= 0) return;
 
       try {
         const response = await axios
@@ -27,7 +25,7 @@ const ProductGroupForm = () => {
         setFormInitialValues({ title: response.data });
       } catch (err) {}
     };
-    
+
     loadData();
   }, [id]);
 
@@ -62,13 +60,7 @@ const ProductGroupForm = () => {
   const { values, errors, touched, handleChange, handleSubmit, isSubmitting } =
     formik;
 
-  console.log(errors);
-
   return (
-    <SideOverlap
-      open={true}
-      onClose={() => navigate("/settings/basic/product-group")}
-    >
       <form className="w-full h-full flex flex-col" onSubmit={handleSubmit}>
         <div className="bg-sky-500 px-4 py-4 text-lg text-white flex-none">
           {id ? "New" : "Edit"} Product Group
@@ -95,7 +87,6 @@ const ProductGroupForm = () => {
           {!isSubmitting && "Submit"}
         </Button>
       </form>
-    </SideOverlap>
   );
 };
 

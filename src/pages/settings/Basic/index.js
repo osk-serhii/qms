@@ -3,7 +3,6 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 
 function BasicSetting() {
   const location = useLocation();
-  console.log(location);
   return (
     <>
       <Breadcrumb className="mx-4 my-2">
