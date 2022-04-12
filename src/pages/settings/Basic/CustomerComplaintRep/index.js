@@ -1,37 +1,61 @@
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faBan, faPen } from "@fortawesome/free-solid-svg-icons";
-import { Button, Input, Table, Tooltip } from "antd";
+import { faPlus, faLock, faUnlock, faPen } from "@fortawesome/free-solid-svg-icons";
+import { Button, Modal, Input, Table, Tooltip, message } from "antd";
 import { Link, Outlet } from "react-router-dom";
+import axios from 'axios';
+import moment from 'moment';
+
+import {
+  DATETIME_DEFAULT_FORMAT
+} from '../../../../services/config';
+import CustomerComplaintRepForm from "./Form";
+import SideOverlap from "../../../../@components/SideOverlap";
 
 const CustomerComplaintRep = () => {
   const columns = [
     {
       title: "Name",
-      dataIndex: "name",
+      dataIndex: 'employee',
+      render: (employee) => (employee.first_name + ' ' + employee.last_name)
+    },
+    {
+      title: "Status",
+      dataIndex: "is_active",
+      render: (isActive) => <span>{isActive ? "Active" : "Blocked"}</span>
+    },
+    {
+      title: 'Status',
+      dataIndex: 'is_active',
+      render: (isActive) => <span>{ isActive ? 'Active' : 'Blocked' }</span>
     },
     {
       title: "Created",
-      dataIndex: "createdAt",
+      dataIndex: "created_at",
+      render: (createdAt) => moment(createdAt).format(DATETIME_DEFAULT_FORMAT),
     },
     {
       title: "Modified",
-      dataIndex: "modifiedAt",
+      dataIndex: "updated_at",
+      render: (updatedAt) => moment(updatedAt).format(DATETIME_DEFAULT_FORMAT),
     },
     {
       title: <div className="text-center">Action</div>,
       width: 100,
-      render: () => (
+      render: (row) => (
         <div className="text-center">
           <Tooltip title="Edit">
             <Button
               className="border-0 hover:bg-transparent"
               icon={<FontAwesomeIcon icon={faPen} />}
+              onClick={() => setEditingRowId(row.id)}
             />
           </Tooltip>
-          <Tooltip title="block">
+          <Tooltip title={row.is_active ? 'block' : 'active'}>
             <Button
               className="border-0 hover:bg-transparent"
-              icon={<FontAwesomeIcon icon={faBan} />}
+              icon={<FontAwesomeIcon icon={row.is_active ? faLock: faUnlock } />}
+              onClick={() => blockRow(row.id)}
             />
           </Tooltip>
         </div>
@@ -39,43 +63,121 @@ const CustomerComplaintRep = () => {
     },
   ];
 
-  const data = [
-    {
-      id: "1",
-      name: "name1",
-      createdAt: "2022-01-03 11:11:11",
-      modifiedAt: "2022-03-01 09:09:09",
-    },
-    {
-      id: "2",
-      name: "name2",
-      createdAt: "2022-01-03 11:11:11",
-      modifiedAt: "2022-03-01 09:09:09",
-    },
-    {
-      id: "3",
-      name: "name3",
-      createdAt: "2022-04-09 11:11:11",
-      modifiedAt: "2022-04-10 09:09:09",
-    },
-  ];
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
+  const [searchVal, setSearchVal] = useState('');
+  const [pagination, setpagination] = useState({
+    current: 1,
+    pageSize: 5,
+    total: 0,
+  });
+  const [editingRowId, setEditingRowId] = useState(-1);
 
+  const loadData = async (searchVal, pagination) => {
+    setLoading(true);
+    const mgtReps = await axios.get("/settings/cus-com-reps", {params: {
+      searchVal,
+      page: pagination.current,
+      pageSize: pagination.pageSize,
+    }}).then((res) => res.data);
+    setData(mgtReps.data);
+    setpagination({
+      current: mgtReps.meta.current_page,
+      pageSize: mgtReps.meta.per_page,
+      total: mgtReps.meta.total,
+    });
+  };
+
+  useEffect(() => {
+    if(editingRowId === -1) {
+      loadData(searchVal, pagination);
+    }
+  },[editingRowId]);
+
+  const handleSearch = (value) => {
+    setSearchVal(value)
+    loadData(value, pagination);
+  }
+
+  const handlepagination = (pagination) => {
+    setpagination(pagination);
+    loadData(searchVal, pagination);
+  }
+
+  const blockRow = async (rowId) => {
+    Modal.confirm({
+      title: (
+        <div className="text-center">
+          Are you sure?
+        </div>
+      ),
+      okText: "YES",
+      icon: null,
+      cancelText: "NO",
+      width: 340,
+      okButtonProps: {
+        className: "btn-yellow hvr-float-shadow w-32 h-10 text-xs ml-3.5",
+      },
+      cancelButtonProps: {
+        className: "btn-danger hvr-float-shadow w-32 h-10 text-xs",
+      },
+      onOk: async () => {
+        try {
+          const res = await axios
+            .post(`/settings/cus-com-reps/block/${rowId}`)
+            .then((res) => res.data);
+          if (res?.data?.id) {
+            message.success("Action successfully.");
+            loadData(searchVal, pagination);
+          } else {
+            throw new Error("Something went wrong on server.");
+          }
+        } catch (err) {
+          message.error("Something went wrong. Please try again later.");
+        }
+      },
+      onCancel() {},
+    });
+  }
   return (
     <div style={{ minHeight: 360 }}>
       <div className="flex justify-between mb-2">
-        <Input.Search placeholder="input search text" className="w-60" />
-        <Link
-          to={`/settings/basic/product-group/create`}
-          className="ant-btn ant-btn-primary"
+        <Input.Search 
+          placeholder="search..." 
+          className="w-60"
+          defaultValue={searchVal}
+          onSearch={handleSearch}
+          />
+        <Button
+          type="primary"
+          onClick={() => setEditingRowId(null)}
         >
           <FontAwesomeIcon icon={faPlus} className="mr-1" />
-          New Customer Complaint Rep
-        </Link>
+          New Customer Complaint Representative
+        </Button>
       </div>
 
-      <Table columns={columns} dataSource={data} size="middle" />
+      <Table 
+        columns={columns} 
+        dataSource={data} 
+        size="middle"
+        pagination={pagination}
+        onChange={(pagination) => handlepagination(pagination)}
+        rowKey={(record) => record.id} />
 
-      <Outlet />
+      {/* Start Form */}
+        <SideOverlap
+          open={editingRowId !== -1}
+          onClose={() => {
+            setEditingRowId(-1);
+          }}
+          width="500"
+        >
+          <CustomerComplaintRepForm
+            id={editingRowId}
+            onSave={() => setEditingRowId(-1)} />
+        </SideOverlap>
+      {/* End Form */}
     </div>
   );
 }

@@ -16,32 +16,43 @@ const initialState = {
   list: {
     pagination: {
       current: 1,
-      pageSize: 10,
+      pageSize: 5,
       total: 0,
     },
     data: [],
+    searchVal: ""
   },
 };
 
 export const productGroupsSlice = createSlice({
   name: "productGroups",
   initialState,
-  reducers: {},
+  reducers: {
+    setList: (state, action) => {
+      state.list = {
+        ...state.list,
+        ...action.payload
+      };
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(loadProductGroups.fulfilled, (state, action) => {
+      const productGroups = action.payload;
+      console.log(action.payload)
       state.list = {
+        ...state.list,
+        data: productGroups.data,
         pagination: {
-          current: action.payload.meta.current_page,
-          pageSize: action.payload.meta.per_page,
-          total: action.payload.meta.total,
-        },
-        data: action.payload.data,
+          current: productGroups.meta.current_page,
+          total: productGroups.meta.total,
+          pageSize: productGroups.meta.per_page
+        }
       };
     });
   },
 });
 
 // Action creators are generated for each case reducer function
-// export const {  } = productGroupsSlice.actions
+export const { setList } = productGroupsSlice.actions
 
 export default productGroupsSlice.reducer;

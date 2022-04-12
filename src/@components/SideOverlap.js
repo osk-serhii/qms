@@ -1,6 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
+
 
 function SideOverlap(props) {
   const containerRef = useRef(null);
@@ -37,7 +40,14 @@ function SideOverlap(props) {
       onClick={clickOutSide}
       ref={containerRef}
     >
-      <div className="bg-white h-full" style={{ width: props.width }}>
+      <div className="bg-white h-full relative" style={{ width: props.width }}>
+        {props.showClose &&
+          <FontAwesomeIcon
+            className="absolute right-3 top-3 text-white text-xl cursor-pointer"
+            style={props.closeIconStyles}
+            icon={faClose}
+            onClick={props.onClose} />
+        }
         {props.children}
       </div>
     </div>,
@@ -50,14 +60,18 @@ SideOverlap.propTypes = {
   width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   open: PropTypes.bool,
   onClose: PropTypes.func,
-  backdrop: PropTypes.bool
+  backdrop: PropTypes.bool,
+  showClose: PropTypes.bool,
+  closeIconStyles: PropTypes.object,
 };
 
 SideOverlap.defaultProps = {
   open: true,
   width: 320,
   onClose: () => {},
-  backdrop: true
+  backdrop: true,
+  showClose: false,
+  closeIconStyles: {},
 };
 
 export default SideOverlap;

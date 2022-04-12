@@ -1,7 +1,8 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
+import { refresh } from '../store/authSlice';
 import Login from './auth/Login';
 import AppContainer from "./layout/AppContainer";
 import Home from "./home";
@@ -15,8 +16,19 @@ import ManagementRep from './settings/Basic/ManagementRep';
 import CustomerComplaintRep from './settings/Basic/CustomerComplaintRep';
 
 export default function App() {
-
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    if(user) return;
+    dispatch(refresh()).then((res) => {
+      if(res.payload.user) {
+        //navigate(location.pathname);
+      }
+    });
+  }, []);
 
   if (!user) {
     return (
@@ -27,8 +39,6 @@ export default function App() {
       </Routes>
     );
   }
-
-  console.log('AppComponent=>', user);
 
   return (
     <Routes>
@@ -42,10 +52,7 @@ export default function App() {
             <Route path="plant" element={<Plant />} />
             <Route path="department" element={<Department />} />
             
-            <Route path="employee" element={<Employee />}>
-              <Route path="create" element={<EmployeeForm />} />
-              <Route path=":id" element={<EmployeeForm />} />
-            </Route>
+            <Route path="employee" element={<Employee />} />
             
             <Route path="management-rep" element={<ManagementRep />} />
             <Route path="customer-complaint-rep" element={<CustomerComplaintRep />} />

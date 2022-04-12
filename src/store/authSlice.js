@@ -9,6 +9,19 @@ export const login = createAsyncThunk(
   }
 );
 
+export const refresh = createAsyncThunk(
+  "/auth/refresh",
+  async () => {
+    const token = storage.getToken();
+    if(token) {
+      return await axios
+        .post("/auth/refresh")
+        .then((res) => res.data);
+    }
+    return null;
+  }
+);
+
 const initialState = {
   user: null
 };
@@ -28,6 +41,12 @@ export const authSlice = createSlice({
       if (action.payload.user) {
         storage.setToken('Bearer' + action.payload.access_token);
       }
+    });
+
+    builder.addCase(refresh.fulfilled, (state, action) => {
+      if(!action.payload) return;
+      state.user = action.payload.user;
+      storage.setToken('Bearer' + action.payload.access_token);
     });
   },
 });

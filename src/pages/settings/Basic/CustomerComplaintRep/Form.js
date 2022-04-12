@@ -1,43 +1,50 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { Button, Input, message } from "antd";
+import { Button, Input, message, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
+const { Option } = Select;
+
 const ProductGroupForm = (props) => {
   const { id } = props;
-  const titleRef = useRef(null);
   const navigate = useNavigate();
   const [formInitialValues, setFormInitialValues] = useState({
-    title: "",
+    employeeId: "Please select employee",
   });
+  const [employees, setEmployees] = useState(null);
+
+  const loadMgtRep = async () => {
+    try {
+      const mgtRep = await axios
+        .get(`/settings/cus-com-reps/${id}`)
+        .then((res) => res.data);
+
+      setFormInitialValues({ employeeId: mgtRep.data.employee_id });
+    } catch (err) {}
+  };
+
+  const loadRelationData = async () => {
+    const relationData = await axios
+      .get('settings/cus-com-reps/create')
+      .then(res => res.data);
+
+    setEmployees(relationData.employees);
+  }
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await axios
-          .get(`/settings/product-groups/${id}`)
-          .then((res) => res.data);
-
-        setFormInitialValues({ title: response.data.title });
-      } catch (err) {}
-    };
-
+    loadRelationData();
     if (id > 0) {
-      loadData();
-    }
-
-    if (id !== -1) {
-      titleRef.current.focus();
+      loadMgtRep();
     }
   }, [id]);
 
   const formSchema = Yup.object().shape({
-    title: Yup.string().required("Required"),
+    employeeId: Yup.number().required("Required"),
   });
 
   const formik = useFormik({
@@ -48,8 +55,8 @@ const ProductGroupForm = (props) => {
       setSubmitting(true);
 
       try {
-        await axios[id ? "put" : "post"](`/settings/product-groups/${id || ""}`, {
-          title: values.title,
+        await axios[id ? "put" : "post"](`/settings/cus-com-reps/${id || ""}`, {
+          employee_id: values.employeeId,
         }).then((res) => res.data);
 
         props.onSave();
@@ -63,29 +70,38 @@ const ProductGroupForm = (props) => {
     },
   });
 
-  const { values, errors, touched, handleChange, handleSubmit, isSubmitting } =
-    formik;
+  const { 
+    values, 
+    errors, 
+    touched,
+    setFieldValue, 
+    handleSubmit, 
+    isSubmitting 
+  } = formik;
 
   return (
       <form className="w-full h-full flex flex-col" onSubmit={handleSubmit}>
         <div className="bg-sky-500 px-4 py-4 text-lg text-white flex-none">
-          {id ? "Edit" : "New"} Product Group
+          {id ? "Edit" : "New"} Customer Complaint Representatvie
         </div>
 
         <div className="flex-grow p-2">
           <div>
             <label>
-              Title <span className="text-red-600">*</span>
+              Name <span className="text-red-600">*</span>
             </label>
 
-            <Input
-              className={`${touched.title && errors.title && "border-red-500"}`}
-              id="title"
-              name="title"
-              value={values.title}
-              onChange={handleChange}
-              ref={titleRef}
-            />
+            <Select
+              className={`${touched.name && errors.name && "border-red-500"}` + " w-full"}
+              value={values.employeeId}
+              onChange={value => formik.setFieldValue('employeeId', value)}
+            >
+              {employees?.map(employee =>
+                <Option value={employee.id}>
+                  {employee.first_name + ' ' + employee.last_name}
+                </Option>
+              )}
+            </Select>
           </div>
         </div>
 

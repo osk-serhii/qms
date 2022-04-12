@@ -1,7 +1,16 @@
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faBan, faPen } from "@fortawesome/free-solid-svg-icons";
-import { Button, Input, Table, Tooltip } from "antd";
+import { faPlus, faLock, faUnlock, faPen } from "@fortawesome/free-solid-svg-icons";
+import { Button, Modal, Input, Table, Tooltip, message } from "antd";
 import { Link, Outlet } from "react-router-dom";
+import axios from 'axios';
+import moment from 'moment';
+
+import {
+  DATETIME_DEFAULT_FORMAT
+} from '../../../../services/config';
+import EmployeeForm from "./Form";
+import SideOverlap from "../../../../@components/SideOverlap";
 
 const Employee = () => {
   const columns = [
@@ -15,7 +24,7 @@ const Employee = () => {
     },
     {
       title: "Employee ID",
-      dataIndex: "employee_id",
+      dataIndex: "id_num",
     },
     {
       title: "E-Mail",
@@ -24,42 +33,55 @@ const Employee = () => {
     {
       title: "Plant",
       dataIndex: "plant",
-    },
-    {
-      title: "Plant Head",
-      dataIndex: "plant_head",
+      render: (plant) => plant.title
     },
     {
       title: "Department",
       dataIndex: "department",
+      render: (department) => department.name
     },
     {
-      title: "Plantform User",
-      dataIndex: "plantform_user",
+      title: "Plant Head",
+      dataIndex: "is_plant_head",
+      render: (isPlantHead) => isPlantHead ? "Yes" : "No"
+    },
+    {
+      title: "Platform User",
+      dataIndex: "is_platform_user",
+      render: (isPlatformUser) => isPlatformUser ? "Yes" : "No"
+    },
+    {
+      title: 'Status',
+      dataIndex: 'is_active',
+      render: (isActive) => <span>{ isActive ? 'Active' : 'Blocked' }</span>
     },
     {
       title: "Created",
-      dataIndex: "createdAt",
+      dataIndex: "created_at",
+      render: (createdAt) => moment(createdAt).format(DATETIME_DEFAULT_FORMAT),
     },
     {
       title: "Modified",
-      dataIndex: "modifiedAt",
+      dataIndex: "updated_at",
+      render: (updatedAt) => moment(updatedAt).format(DATETIME_DEFAULT_FORMAT),
     },
     {
       title: <div className="text-center">Action</div>,
       width: 100,
-      render: () => (
+      render: (row) => (
         <div className="text-center">
           <Tooltip title="Edit">
             <Button
               className="border-0 hover:bg-transparent"
               icon={<FontAwesomeIcon icon={faPen} />}
+              onClick={() => setEditingRowId(row.id)}
             />
           </Tooltip>
-          <Tooltip title="block">
+          <Tooltip title={row.is_active ? 'block' : 'active'}>
             <Button
               className="border-0 hover:bg-transparent"
-              icon={<FontAwesomeIcon icon={faBan} />}
+              icon={<FontAwesomeIcon icon={row.is_active ? faLock: faUnlock } />}
+              onClick={() => blockRow(row.id)}
             />
           </Tooltip>
         </div>
@@ -67,38 +89,123 @@ const Employee = () => {
     },
   ];
 
-  const data = [
-    {
-      id: "1",
-      first_name: "First 1",
-      last_name: "Last1",
-      employee_id: "SDES3245",
-      email: "test1@gmail.com",
-      plant: "Plant1",
-      department: "Management",
-      plant_head: 'Yes',
-      plantform_user: "Yes",
-      createdAt: "2022-01-03 11:11:11",
-      modifiedAt: "2022-03-01 09:09:09",
-    },
-  ];
+  
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
+  const [searchVal, setSearchVal] = useState('');
+  const [pagination, setpagination] = useState({
+    current: 1,
+    pageSize: 5,
+    total: 0,
+  });
+  const [editingRowId, setEditingRowId] = useState(-1);
 
+  const loadData = async (searchVal, pagination) => {
+    setLoading(true);
+    const employees = await axios.get("/settings/employees", {params: {
+      searchVal,
+      page: pagination.current,
+      pageSize: pagination.pageSize,
+    }}).then((res) => res.data);
+    setData(employees.data);
+    setpagination({
+      current: employees.meta.current_page,
+      pageSize: employees.meta.per_page,
+      total: employees.meta.total,
+    });
+  };
+
+  useEffect(() => {
+    if(editingRowId === -1) {
+      loadData(searchVal, pagination);
+    }
+  },[editingRowId]);
+
+  const handleSearch = (value) => {
+    setSearchVal(value)
+    loadData(value, pagination);
+  }
+
+  const handlepagination = (pagination) => {
+    setpagination(pagination);
+    loadData(searchVal, pagination);
+  }
+
+  const blockRow = async (rowId) => {
+    Modal.confirm({
+      title: (
+        <div className="text-center">
+          Are you sure?
+        </div>
+      ),
+      okText: "YES",
+      icon: null,
+      cancelText: "NO",
+      width: 340,
+      okButtonProps: {
+        className: "btn-yellow hvr-float-shadow w-32 h-10 text-xs ml-3.5",
+      },
+      cancelButtonProps: {
+        className: "btn-danger hvr-float-shadow w-32 h-10 text-xs",
+      },
+      onOk: async () => {
+        try {
+          const res = await axios
+            .post(`/settings/employees/block/${rowId}`)
+            .then((res) => res.data);
+          if (res?.data?.id) {
+            message.success("Action successfully.");
+            loadData(searchVal, pagination);
+          } else {
+            throw new Error("Something went wrong on server.");
+          }
+        } catch (err) {
+          message.error("Something went wrong. Please try again later.");
+        }
+      },
+      onCancel() {},
+    });
+  }
   return (
     <div style={{ minHeight: 360 }}>
       <div className="flex justify-between mb-2">
-        <Input.Search placeholder="input search text" className="w-60" />
-        <Link
-          to={`/settings/basic/employee/create`}
-          className="ant-btn ant-btn-primary"
+        <Input.Search 
+          placeholder="Search..." 
+          className="w-60"
+          defaultValue={searchVal}
+          onSearch={handleSearch}
+          />
+        <Button
+          type="primary"
+          onClick={() => setEditingRowId(null)}
         >
           <FontAwesomeIcon icon={faPlus} className="mr-1" />
           New Employee
-        </Link>
+        </Button>
       </div>
 
-      <Table columns={columns} dataSource={data} size="middle" />
+      <Table 
+        columns={columns} 
+        dataSource={data} 
+        size="middle"
+        pagination={pagination}
+        onChange={(pagination) => handlepagination(pagination)}
+        rowKey={(record) => record.id} />
 
-      <Outlet />
+      {/* Start Form */}
+        <SideOverlap
+          open={editingRowId !== -1}
+          width="100%"
+          showClose={true}
+          onClose={() => {
+            setEditingRowId(-1);
+          }}
+        >
+          <EmployeeForm
+            id={editingRowId}
+            onSave={() => setEditingRowId(-1)} />
+        </SideOverlap>
+      {/* End Form */}
     </div>
   );
 }

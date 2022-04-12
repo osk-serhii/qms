@@ -4,3 +4,26 @@
 
 @import "~antd/dist/antd.css";
 @import "./antd-custom.css";
+
+
+@layer components {
+  .btn-yellow {
+    @apply bg-orange-400 text-gray-900 hover:bg-orange-400 hover:text-gray-900 focus:bg-orange-400 focus:text-sky-600 font-bold border-0;
+  }
+
+  .btn-default {
+    @apply bg-slate-300 text-gray-900 hover:bg-slate-300 hover:text-gray-900 focus:bg-slate-300 focus:text-sky-600 font-bold border-0;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-600 hover:text-white focus:bg-red-600 focus:text-white font-bold border-0;
+  }
+
+  .btn-dark {
+    @apply bg-stone-600 text-white hover:bg-stone-600 hover:text-white focus:bg-stone-600 focus:text-white font-bold border-0;
+  }
+
+  .btn-transparent {
+    @apply bg-transparent text-white hover:bg-transparent hover:text-white focus:bg-transparent focus:text-white font-bold border border-white;
+  }
+}

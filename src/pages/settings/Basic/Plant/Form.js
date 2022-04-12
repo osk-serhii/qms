@@ -20,7 +20,7 @@ const ProductGroupForm = (props) => {
     const loadData = async () => {
       try {
         const response = await axios
-          .get(`/settings/product-groups/${id}`)
+          .get(`/settings/plants/${id}`)
           .then((res) => res.data);
 
         setFormInitialValues({ title: response.data.title });
@@ -48,7 +48,7 @@ const ProductGroupForm = (props) => {
       setSubmitting(true);
 
       try {
-        await axios[id ? "put" : "post"](`/settings/product-groups/${id || ""}`, {
+        await axios[id ? "put" : "post"](`/settings/plants/${id || ""}`, {
           title: values.title,
         }).then((res) => res.data);
 
