@@ -17,65 +17,7 @@ import {
 } from '../../../../services/config';
 
 function ProductGroup() {
-
-  const searchInputRef = useRef(null);
-  const dispatch = useDispatch();
-  const productGroups = useSelector((state) => state.productGroups.list);
-  const [loading, setLoading] = useState(false);
-
-  const [editingRowId, setEditingRowId] = useState(-1);
-
-  const handleTableFilterChange = async () => {
-
-    setLoading(true);
-    dispatch(
-      loadProductGroups({
-        searchVal: productGroups.searchVal,
-        pageSize: productGroups.pagination.pageSize,
-        page: productGroups.pagination.current
-      })
-    );
-    setLoading(false);
-    searchInputRef.current.focus();
-  };
-
-  const blockRow = async (rowId) => {
-    Modal.confirm({
-      title: (
-        <div className="text-center">
-          Are you sure?
-        </div>
-      ),
-      okText: "YES",
-      icon: null,
-      cancelText: "NO",
-      width: 340,
-      okButtonProps: {
-        className: "btn-yellow hvr-float-shadow w-32 h-10 text-xs ml-3.5",
-      },
-      cancelButtonProps: {
-        className: "btn-danger hvr-float-shadow w-32 h-10 text-xs",
-      },
-      onOk: async () => {
-        try {
-          const res = await axios
-            .post(`/settings/product-groups/block/${rowId}`)
-            .then((res) => res.data);
-
-          if (res?.data?.id) {
-            message.success("Action successfully.");
-            handleTableFilterChange();
-          } else {
-            throw new Error("Something went wrong on server.");
-          }
-        } catch (err) {
-          message.error("Something went wrong. Please try again later.");
-        }
-      },
-      onCancel() {},
-    });
-  }
-
+  
   const columns = [
     {
       title: "Title",
@@ -120,23 +62,82 @@ function ProductGroup() {
     },
   ];
 
+  const searchInputRef = useRef(null);
+  const dispatch = useDispatch();
+  const productGroups = useSelector((state) => state.productGroups.list);
+  const [loading, setLoading] = useState(false);
+
+  const [editingRowId, setEditingRowId] = useState(-1);
+
+  const handleTableFilterChange = async (searchVal, pagination) => {
+
+    setLoading(true);
+    await dispatch(
+      loadProductGroups({
+        searchVal,
+        pageSize: pagination.pageSize,
+        page: pagination.current
+      })
+    );
+    setLoading(false);
+    searchInputRef.current.focus();
+  };
+
+
   const handleSearch = (value) => {
-     dispatch(setList({ searchVal: value }))
+    dispatch(setList({ searchVal: value }))
+    handleTableFilterChange(value, productGroups.pagination);
   }
 
   const handlePagenation = (pagination) => {
-    dispatch(setList({ pagination }))
+    handleTableFilterChange(productGroups.searchVal, pagination);
   }
 
   useEffect(() => {
     if (editingRowId === -1) {
-      handleTableFilterChange();
+      handleTableFilterChange(
+        productGroups.searchVal, 
+        productGroups.pagination
+      );
     }
   }, [editingRowId]);
 
-  useEffect(() => {
-    handleTableFilterChange();
-  }, [productGroups.searchVal]);
+  const blockRow = async (rowId) => {
+    Modal.confirm({
+      title: (
+        <div className="text-center">
+          Are you sure?
+        </div>
+      ),
+      okText: "YES",
+      icon: null,
+      cancelText: "NO",
+      width: 340,
+      okButtonProps: {
+        className: "btn-yellow hvr-float-shadow w-32 h-10 text-xs ml-3.5",
+      },
+      cancelButtonProps: {
+        className: "btn-danger hvr-float-shadow w-32 h-10 text-xs",
+      },
+      onOk: async () => {
+        try {
+          const res = await axios
+            .post(`/settings/product-groups/block/${rowId}`)
+            .then((res) => res.data);
+
+          if (res?.data?.id) {
+            message.success("Action successfully.");
+            handleTableFilterChange();
+          } else {
+            throw new Error("Something went wrong on server.");
+          }
+        } catch (err) {
+          message.error("Something went wrong. Please try again later.");
+        }
+      },
+      onCancel() {},
+    });
+  }
 
   return (
     <div style={{ minHeight: 360 }}>
@@ -145,7 +146,6 @@ function ProductGroup() {
           placeholder="Search..."
           className="w-60"
           defaultValue={productGroups.searchVal}
-          //value={productGroups.searchVal}
           ref={searchInputRef}
           onSearch={handleSearch} />
         <Button

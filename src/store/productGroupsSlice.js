@@ -38,7 +38,6 @@ export const productGroupsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(loadProductGroups.fulfilled, (state, action) => {
       const productGroups = action.payload;
-      console.log(action.payload)
       state.list = {
         ...state.list,
         data: productGroups.data,

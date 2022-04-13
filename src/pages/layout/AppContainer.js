@@ -41,7 +41,6 @@ export default function  Appcontainer() {
   );
 
   const user = useSelector((state) => state.auth.user);
-  console.log(user);
 
   const [collapsed, setCollapsed ] = useState(true);
 

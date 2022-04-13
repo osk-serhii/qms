@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faLock, faUnlock, faPen } from "@fortawesome/free-solid-svg-icons";
 import { Button, Modal, Input, Table, Tooltip, message } from "antd";
@@ -62,6 +62,7 @@ const CustomerComplaintRep = () => {
     },
   ];
 
+  const searchInpurRef = useRef();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [searchVal, setSearchVal] = useState('');
@@ -79,13 +80,15 @@ const CustomerComplaintRep = () => {
       page: pagination.current,
       pageSize: pagination.pageSize,
     }}).then((res) => res.data);
+    setLoading(false);
+
+    searchInpurRef.current.focus();
     setData(mgtReps.data);
     setpagination({
       current: mgtReps.meta.current_page,
       pageSize: mgtReps.meta.per_page,
       total: mgtReps.meta.total,
     });
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -95,12 +98,16 @@ const CustomerComplaintRep = () => {
   },[editingRowId]);
 
   const handleSearch = (value) => {
-    setSearchVal(value)
-    loadData(value, pagination);
+    setSearchVal(value);
+    const newPagination = {
+      current: 1,
+      pageSize: pagination.pageSize,
+      total: pagination.total 
+    };
+    loadData(value, newPagination);
   }
 
   const handlepagination = (pagination) => {
-    setpagination(pagination);
     loadData(searchVal, pagination);
   }
 
@@ -146,6 +153,7 @@ const CustomerComplaintRep = () => {
           placeholder="Search..." 
           className="w-60"
           defaultValue={searchVal}
+          ref={searchInpurRef}
           onSearch={handleSearch}
           />
         <Button

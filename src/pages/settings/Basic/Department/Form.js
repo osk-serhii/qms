@@ -132,7 +132,7 @@ const ProductGroupForm = (props) => {
             </label>
 
             <Select
-              className={`${touched.plantId && errors.plantId && "border-red-500"} w-fll`}
+              className={`${touched.plantId && errors.plantId && "border-red-500"} w-full`}
               value={values.plantId}
               onChange={value => setFieldValue('plantId', value)}
             >
