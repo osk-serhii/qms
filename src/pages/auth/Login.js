@@ -139,10 +139,10 @@ export default function Login() {
           </div>
         </div>
 
-       {/* <ForgotPasswordModal
+        <ForgotPasswordModal
           visible={isForgotPasswordModalOpened}
           onCancel={() => setForgotPasswordModalOpened(false)}
-        />*/}
+        />
       </div>
     </CustomScrollbar>
   );

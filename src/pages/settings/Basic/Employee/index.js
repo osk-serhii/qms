@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faLock, faUnlock, faPen } from "@fortawesome/free-solid-svg-icons";
 import { Button, Modal, Input, Table, Tooltip, message } from "antd";
-import { Link, Outlet } from "react-router-dom";
 import axios from 'axios';
 import moment from 'moment';
 
@@ -113,6 +112,7 @@ const Employee = () => {
       pageSize: employees.meta.per_page,
       total: employees.meta.total,
     });
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -187,6 +187,7 @@ const Employee = () => {
       <Table 
         columns={columns} 
         dataSource={data} 
+        loading={loading}
         size="middle"
         pagination={pagination}
         onChange={(pagination) => handlepagination(pagination)}

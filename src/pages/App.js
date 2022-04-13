@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation, Navigate  } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { refresh } from '../store/authSlice';
@@ -11,21 +11,21 @@ import ProductGroup from "./settings/Basic/ProductGroup";
 import Plant from "./settings/Basic/Plant";
 import Department from './settings/Basic/Department';
 import Employee from './settings/Basic/Employee';
-import EmployeeForm from './settings/Basic/Employee/Form';
 import ManagementRep from './settings/Basic/ManagementRep';
 import CustomerComplaintRep from './settings/Basic/CustomerComplaintRep';
 
+
 export default function App() {
-  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if(user) return;
     dispatch(refresh()).then((res) => {
-      if(res.payload.user) {
-        //navigate(location.pathname);
+      if(res.payload?.user) {
+        navigate(location.pathname);
       }
     });
   }, []);
@@ -36,6 +36,7 @@ export default function App() {
         <Route path="/" element={<Login />} />
         <Route path="login" element={<Login />} />
         {/*<Route path="reset-password/:token" element={<ResetPassword />} />*/}
+        <Route path="*"  element={<Navigate replace to="/" />} />
       </Routes>
     );
   }

@@ -2,9 +2,8 @@ import { message } from 'antd';
 import { BASE_URL } from './config';
 import axios from 'axios';
 import storage from "./storage";
-// import store from '../store';
-
-
+import store from '../store';
+import { logout } from '../store/authSlice';
 
 // set base url
 axios.defaults.baseURL = BASE_URL;
@@ -35,7 +34,7 @@ axios.interceptors.response.use(response => {
   // Access Token was expired
   if (err?.response.status === 401) {
     storage.removeToken();
-    // store.dispatch(signout());
+    store.dispatch(logout());
   }
 
   return Promise.reject(err);

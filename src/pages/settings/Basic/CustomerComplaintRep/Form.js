@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { Button, Input, message, Select } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Button, message, Select } from "antd";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -12,7 +11,6 @@ const { Option } = Select;
 
 const ProductGroupForm = (props) => {
   const { id } = props;
-  const navigate = useNavigate();
   const [formInitialValues, setFormInitialValues] = useState({
     employeeId: "Please select employee",
   });
@@ -92,9 +90,9 @@ const ProductGroupForm = (props) => {
             </label>
 
             <Select
-              className={`${touched.name && errors.name && "border-red-500"}` + " w-full"}
+              className={`${touched.name && errors.name && "border-red-500"} w-full`}
               value={values.employeeId}
-              onChange={value => formik.setFieldValue('employeeId', value)}
+              onChange={value => setFieldValue('employeeId', value)}
             >
               {employees?.map(employee =>
                 <Option value={employee.id}>

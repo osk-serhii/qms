@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Button, Input, message } from "antd";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -11,7 +10,6 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 const ProductGroupForm = (props) => {
   const { id } = props;
   const titleRef = useRef(null);
-  const navigate = useNavigate();
   const [formInitialValues, setFormInitialValues] = useState({
     title: "",
   });

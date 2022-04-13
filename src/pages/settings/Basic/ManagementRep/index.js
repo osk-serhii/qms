@@ -73,12 +73,15 @@ const ManagementRep = () => {
   const [editingRowId, setEditingRowId] = useState(-1);
 
   const loadData = async (searchVal, pagination) => {
+    
     setLoading(true);
     const mgtReps = await axios.get("/settings/mgt-reps", {params: {
       searchVal,
       page: pagination.current,
       pageSize: pagination.pageSize,
     }}).then((res) => res.data);
+    setLoading(false);
+
     setData(mgtReps.data);
     setpagination({
       current: mgtReps.meta.current_page,
@@ -142,7 +145,7 @@ const ManagementRep = () => {
     <div style={{ minHeight: 360 }}>
       <div className="flex justify-between mb-2">
         <Input.Search 
-          placeholder="search..." 
+          placeholder="Search..." 
           className="w-60"
           defaultValue={searchVal}
           onSearch={handleSearch}
@@ -158,7 +161,8 @@ const ManagementRep = () => {
 
       <Table 
         columns={columns} 
-        dataSource={data} 
+        dataSource={data}
+        loading={loading}
         size="middle"
         pagination={pagination}
         onChange={(pagination) => handlepagination(pagination)}

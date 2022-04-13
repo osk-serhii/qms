@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Button, Input, message, Select } from "antd";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -13,7 +12,6 @@ const { Option } = Select;
 const ProductGroupForm = (props) => {
   const { id } = props;
   const titleRef = useRef(null);
-  const navigate = useNavigate();
   const [formInitialValues, setFormInitialValues] = useState({
     name: "",
     plantId: "Please select plant",
@@ -134,10 +132,9 @@ const ProductGroupForm = (props) => {
             </label>
 
             <Select
-              className={`${touched.plantId && errors.plantId && "border-red-500"}`}
+              className={`${touched.plantId && errors.plantId && "border-red-500"} w-fll`}
               value={values.plantId}
-              onChange={value => formik.setFieldValue('plantId', value)}
-              className="w-full"
+              onChange={value => setFieldValue('plantId', value)}
             >
               {plants?.map(plant => (
                 <Option value={plant.id}>
@@ -152,9 +149,9 @@ const ProductGroupForm = (props) => {
             </label>
 
             <Select
-              value={values.productGroupId}
-              onChange={value => formik.setFieldValue('productGroupId', value)}
               className="w-full"
+              value={values.productGroupId}
+              onChange={value => setFieldValue('productGroupId', value)}
             >
               {productGroups?.map(productGroup => (
                 <Option value={productGroup.id}>
@@ -169,9 +166,9 @@ const ProductGroupForm = (props) => {
             </label>
 
             <Select 
-              value={values.headId}
-              onChange={value => formik.setFieldValue('headId', value)}
               className="w-full"
+              value={values.headId}
+              onChange={value => setFieldValue('headId', value)}
             >
               {heads?.map(head => (
                 <Option value={head.id}>

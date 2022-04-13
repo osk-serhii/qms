@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faLock, faUnlock, faPen } from "@fortawesome/free-solid-svg-icons";
 import { Button, Modal, Input, Table, Tooltip, message } from "antd";
-import { Link, Outlet } from "react-router-dom";
 import axios from 'axios';
 import moment from 'moment';
 
@@ -90,13 +89,13 @@ const Department = () => {
       page: pagination.current,
       pageSize: pagination.pageSize,
     }}).then((res) => res.data);
-    console.log('departments', employees.data);
     setData(employees.data);
     setpagination({
       current: employees.meta.current_page,
       pageSize: employees.meta.per_page,
       total: employees.meta.total,
     });
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -154,7 +153,7 @@ const Department = () => {
     <div style={{ minHeight: 360 }}>
       <div className="flex justify-between mb-2">
         <Input.Search 
-          placeholder="search..." 
+          placeholder="Search..." 
           className="w-60"
           defaultValue={searchVal}
           onSearch={handleSearch}
@@ -170,7 +169,8 @@ const Department = () => {
 
       <Table 
         columns={columns} 
-        dataSource={data} 
+        dataSource={data}
+        loading={loading}
         size="middle"
         pagination={pagination}
         onChange={(pagination) => handlepagination(pagination)}

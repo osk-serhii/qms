@@ -1,58 +1,95 @@
-import React from "react";
+import { useState } from "react";
 import { Outlet, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
-import { Layout, Menu } from "antd";
+import { 
+  Layout, 
+  Menu, 
+  Button, 
+  Avatar, 
+  Dropdown, 
+  Space, 
+} from "antd";
 import {
   HomeOutlined,
   AuditOutlined,
   SettingOutlined,
+  UserOutlined
 } from "@ant-design/icons";
+import { logout } from '../../store/authSlice';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
-class Appcontainer extends React.Component {
-  state = {
-    collapsed: false,
-  };
 
-  onCollapse = (collapsed) => {
-    console.log(collapsed);
-    this.setState({ collapsed });
-  };
+export default function  Appcontainer() {
+  
+  const dispatch = useDispatch();;
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <Button type="link" onClick={() => dispatch(logout())}>
+          Logout
+        </Button>
+      </Menu.Item>
+      <Menu.Item>
+        <Button type="link" disabled>
+          Profile
+        </Button>
+      </Menu.Item>
+    </Menu>
+  );
 
-  render() {
-    const { collapsed } = this.state;
-    return (
-      <Layout className="min-h-screen">
-        <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
-          <div className="logo h-8 m-4 bg-gray-600" />
-          <Menu theme="dark" defaultSelectedKeys={["home"]} mode="inline">
-            <Menu.Item key="home" icon={<HomeOutlined />}>
-            <Link to={`/`}>Home</Link>
-            </Menu.Item>
+  const user = useSelector((state) => state.auth.user);
+  console.log(user);
 
-            <Menu.Item key="basic-settings" icon={<SettingOutlined />}>
-              <Link to={`/settings/basic/product-group`}>Basic settings</Link>
-            </Menu.Item>
+  const [collapsed, setCollapsed ] = useState(true);
 
-            <SubMenu key="sub1" icon={<AuditOutlined />} title="Audit">
-              <Menu.Item key="3">Internal Audit</Menu.Item>
-              <Menu.Item key="4">Supplier Audit</Menu.Item>
-              <Menu.Item key="5">NCR</Menu.Item>
-            </SubMenu>
-          </Menu>
-        </Sider>
-        <Layout className="site-layout">
-          <Header className="p-0" />
-          <Content className="my-0">
-            <Outlet />
-          </Content>
-          <Footer className="text-center bg-white">QMS</Footer>
-        </Layout>
+  return (
+    <Layout className="min-h-screen">
+      <Sider collapsible collapsed={collapsed} onCollapse={(collapsed) =>setCollapsed(collapsed)}>
+        <div>
+          <img 
+            className="h-10 mx-auto bg-white  mt-3 mb-2"
+            alt="logo"
+            src="images/logo.png"
+          />
+        </div>
+        <Menu theme="dark" defaultSelectedKeys={["home"]} mode="inline">
+          <Menu.Item key="home" icon={<HomeOutlined />}>
+          <Link to={`/`}>Home</Link>
+          </Menu.Item>
+
+          <Menu.Item key="basic-settings" icon={<SettingOutlined />}>
+            <Link to={`/settings/basic/product-group`}>Basic settings</Link>
+          </Menu.Item>
+
+          <SubMenu key="sub1" icon={<AuditOutlined />} title="Audit">
+            <Menu.Item key="3">Internal Audit</Menu.Item>
+            <Menu.Item key="4">Supplier Audit</Menu.Item>
+            <Menu.Item key="5">NCR</Menu.Item>
+          </SubMenu>
+        </Menu>
+      </Sider>
+      <Layout className="site-layout static">
+        <Header className="p-0">
+        <Dropdown overlay={menu} 
+          placement="bottomRight" 
+          arrow
+          className="absolute top-0 right-5"
+        >
+          <Space align="center" className="cursor-pointer">
+            <Avatar size="large" icon={<UserOutlined />} />
+            <p className="text-white inline">{user.name}</p>
+          </Space>
+        </Dropdown>
+        </Header>
+        
+        <Content className="my-0">
+          <Outlet />
+        </Content>
+        <Footer className="text-center bg-white">QMS</Footer>
       </Layout>
-    );
-  }
+    </Layout>
+  );
 }
-
-export default Appcontainer;

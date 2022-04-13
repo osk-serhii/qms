@@ -142,7 +142,7 @@ function ProductGroup() {
     <div style={{ minHeight: 360 }}>
       <div className="flex justify-between mb-2">
         <Input.Search
-          placeholder="search..."
+          placeholder="Search..."
           className="w-60"
           defaultValue={productGroups.searchVal}
           //value={productGroups.searchVal}

@@ -90,9 +90,9 @@ const ProductGroupForm = (props) => {
             </label>
 
             <Select
-              className={`${touched.name && errors.name && "border-red-500"}` + " w-full"}
+              className={`${touched.name && errors.name && "border-red-500"} w-fll`}
               value={values.employeeId}
-              onChange={value => formik.setFieldValue('employeeId', value)}
+              onChange={value => setFieldValue('employeeId', value)}
             >
               {employees?.map(employee =>
                 <Option value={employee.id}>

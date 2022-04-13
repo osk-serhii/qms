@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Button, Input, message, Select, Row, Col, DatePicker } from "antd";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -14,13 +13,12 @@ const { Option } = Select;
 const EmployeeForm = (props) => {
   const { id } = props;
   const firsNameRef = useRef(null);
-  const navigate = useNavigate();
   const [formInitialValues, setFormInitialValues] = useState({
     firstName: "",
     lastName: "",
     email: "",
     employeeId: "",
-    birthday: new Date,
+    birthday: new Date(),
     plantId: "Please select plant",
     departmentId: "Please select department",
     isPlatformUser: "No",
@@ -207,10 +205,9 @@ const EmployeeForm = (props) => {
               </label>
 
               <Select
-                className={`${touched.plantId && errors.plantId && "border-red-500"}`}
+                className={`${touched.plantId && errors.plantId && "border-red-500"} w-full`}
                 value={values.plantId}
-                onChange={value => formik.setFieldValue('plantId', value)}
-                className="w-full"
+                onChange={value => setFieldValue('plantId', value)}
               >
                 {plants?.map(plant => (
                   <Option value={plant.id}>
@@ -227,9 +224,9 @@ const EmployeeForm = (props) => {
               </label>
 
               <Select
-                value={values.departmentId}
-                onChange={value => formik.setFieldValue('departmentId', value)}
                 className="w-full"
+                value={values.departmentId}
+                onChange={value => setFieldValue('departmentId', value)}
               >
                 {departments?.map(department => (
                   <Option value={department.id}>
@@ -244,9 +241,9 @@ const EmployeeForm = (props) => {
               </label>
 
                <Select
-                value={values.isPlatformUser}
-                onChange={value => formik.setFieldValue('isPlatformUser', value)}
                 className="w-full"
+                value={values.isPlatformUser}
+                onChange={value => setFieldValue('isPlatformUser', value)}
               >
                 <Option value={1}>Yes</Option>
                 <Option value={0}>No</Option>
@@ -258,9 +255,9 @@ const EmployeeForm = (props) => {
               </label>
 
                <Select
-                value={values.isPlantHead}
-                onChange={value => formik.setFieldValue('isPlantHead', value)}
                 className="w-full"
+                value={values.isPlantHead}
+                onChange={value => setFieldValue('isPlantHead', value)}
               >
                 <Option value={1}>Yes</Option>
                 <Option value={0}>No</Option>
