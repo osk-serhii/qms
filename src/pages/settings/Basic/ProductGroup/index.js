@@ -86,7 +86,12 @@ function ProductGroup() {
 
   const handleSearch = (value) => {
     dispatch(setList({ searchVal: value }))
-    handleTableFilterChange(value, productGroups.pagination);
+    const newPagination = {
+      pageSize: productGroups.pagination.pageSize,
+      page: 1,
+      total: productGroups.pagination.total
+    }
+    handleTableFilterChange(value, newPagination);
   }
 
   const handlePagenation = (pagination) => {
@@ -119,6 +124,7 @@ function ProductGroup() {
       cancelButtonProps: {
         className: "btn-danger hvr-float-shadow w-32 h-10 text-xs",
       },
+
       onOk: async () => {
         try {
           const res = await axios
@@ -127,7 +133,10 @@ function ProductGroup() {
 
           if (res?.data?.id) {
             message.success("Action successfully.");
-            handleTableFilterChange();
+            handleTableFilterChange(
+              productGroups.searchVal, 
+              productGroups.pagination
+            );
           } else {
             throw new Error("Something went wrong on server.");
           }

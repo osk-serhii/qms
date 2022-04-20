@@ -195,8 +195,8 @@ const EmployeeForm = (props) => {
 
               <DatePicker
                 className="w-full"
-                value={moment(values.birthday)}
-                onChange={value => formik.setFieldValue('birthday', value)}
+                defaultValue={moment(values.birthday)}
+                onChange={value => setFieldValue('birthday', value)}
               />
             </Col>
             <Col span={8} className="px-4">

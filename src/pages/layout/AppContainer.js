@@ -14,7 +14,10 @@ import {
   HomeOutlined,
   AuditOutlined,
   SettingOutlined,
-  UserOutlined
+  FundViewOutlined,
+  UserOutlined,
+  DashboardOutlined,
+  ControlOutlined  
 } from "@ant-design/icons";
 import { logout } from '../../store/authSlice';
 
@@ -42,7 +45,7 @@ export default function  Appcontainer() {
 
   const user = useSelector((state) => state.auth.user);
 
-  const [collapsed, setCollapsed ] = useState(true);
+  const [collapsed, setCollapsed ] = useState(false);
 
   return (
     <Layout className="min-h-screen">
@@ -63,11 +66,22 @@ export default function  Appcontainer() {
             <Link to={`/settings/basic/product-group`}>Basic settings</Link>
           </Menu.Item>
 
-          <SubMenu key="sub1" icon={<AuditOutlined />} title="Audit">
+          <Menu.Item key="strategic-analysis" icon={<FundViewOutlined />}>
+            <Link to={`/modules/strategic-analysis/interested-parties-analysis-expectation`}>Strategic Analysis</Link>
+          </Menu.Item>
+
+          <Menu.Item key="minutes-meeting" icon={<DashboardOutlined />}>
+            <Link to={`/modules/minutes-meeting`}>Minutes of Meeting</Link>
+          </Menu.Item>
+          <Menu.Item key="management-change" icon={<ControlOutlined />}>
+            <Link to={`/modules/management-change`}>Management of Change</Link>
+          </Menu.Item>
+
+          {/*<SubMenu key="sub1" icon={<AuditOutlined />} title="Audit">
             <Menu.Item key="3">Internal Audit</Menu.Item>
             <Menu.Item key="4">Supplier Audit</Menu.Item>
             <Menu.Item key="5">NCR</Menu.Item>
-          </SubMenu>
+          </SubMenu>*/}
         </Menu>
       </Sider>
       <Layout className="site-layout static">
