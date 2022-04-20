@@ -4,6 +4,7 @@ import authSlice from "./authSlice";
 import productGroupsSlice from "./productGroupsSlice";
 import interestedPartiesAnalysisExpectationsSlice from "./interestedPartiesAnalysisExpectationsSlice";
 import contextAnalysisesSlice from "./contextAnalysisesSlice";
+import strategiesSlice from "./strategiesSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     productGroups: productGroupsSlice,
     interestedPartiesAnalysisExpectations: interestedPartiesAnalysisExpectationsSlice,
     contextAnalysises: contextAnalysisesSlice,
+    strategies: strategiesSlice,
   },
 });
 

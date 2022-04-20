@@ -36,7 +36,7 @@ function StrategicAnalysis() {
           </Link>
           
           <Link
-            to={`/modules/strategy`}
+            to={`/modules/strategic-analysis/strategy`}
             className={` ml-2 ant-btn ${
               location.pathname.indexOf(`/modules/strategic-analysis/strategy`) === 0
                 ? "ant-btn-primary"
@@ -47,7 +47,7 @@ function StrategicAnalysis() {
           </Link>
           
           <Link
-            to={`/modules/Objectvie`}
+            to={`/modules/strategic-analysis/Objectvie`}
             className={` ml-2 ant-btn ${
               location.pathname.indexOf(`/modules/strategic-analysis/Objective`) === 0
                 ? "ant-btn-primary"
