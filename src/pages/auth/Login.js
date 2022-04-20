@@ -63,7 +63,7 @@ export default function Login() {
         className="w-full max-w-screen h-screen bg-cover bg-no-repeat bg-center"
         style={{ backgroundImage: "url(images/login-background.png)" }}
       >
-        <div className="max-w-87.5  min-h-screen mx-auto flex flex-col h-full py-16" style={{width: "500px"}}>
+        <div className="max-w-87.5  min-h-screen mx-auto flex flex-col h-full py-16" style={{width: "350px"}}>
           <form
             onSubmit={handleSubmit}
             className="flex-grow flex flex-col items-center w-full"

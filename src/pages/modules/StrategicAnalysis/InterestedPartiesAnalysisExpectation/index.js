@@ -1,10 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faPen, faEye } from "@fortawesome/free-solid-svg-icons";
-import { Button, Modal, Input, Table, Tooltip, message } from "antd";
+import { Button, Input, Table, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import moment from 'moment';
-import axios from 'axios';
 
 import {
   setList,
@@ -66,7 +65,7 @@ function InterestedPartiesAnalysisExpectation() {
       render: (text, row, index) =>{
         return (
           <div className="text-center">
-            {(index == 0 && interestedPartiesAnalysisExpectations.pagination.current == 1) ? 
+            {(index === 0 && interestedPartiesAnalysisExpectations.pagination.current === 1) ? 
               <Tooltip title="Edit">
                 <Button
                   className="border-0 hover:bg-transparent"

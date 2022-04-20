@@ -8,7 +8,6 @@ import { Button,
   Select, 
   Row, 
   Col, 
-  DatePicker,
   Card,
   Table,
   Tooltip,
@@ -139,7 +138,6 @@ const InterestedPartiesAnalysisExpectationForm = (props) => {
     errors, 
     touched, 
     handleChange,
-    setFieldValue,
     handleSubmit, 
     isSubmitting 
   } = formik;

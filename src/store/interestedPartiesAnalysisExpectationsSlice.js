@@ -39,7 +39,6 @@ export const interestedPartiesAnalysisExpectationsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(loadInterestedPartiesAnalysisExpectations.fulfilled, (state, action) => {
       const interestedPartiesAnalysisExpectations = action.payload;
-      console.log('interestedPartiesAnalysisExpectations', interestedPartiesAnalysisExpectations);
       state.list = {
         ...state.list,
         data: interestedPartiesAnalysisExpectations.data,
